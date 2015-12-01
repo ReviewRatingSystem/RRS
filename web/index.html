@@ -1,0 +1,63 @@
+<html>
+
+  <head>
+    <title>RRS</title>
+    	<link rel="stylesheet" type="text/css" href="styles.css">
+      <link href="bootstrap-3.3.5-dist/css/bootstrap.min.css" rel="stylesheet">
+      <script type="text/javascript" src="jquery-1.11.1.min.js"></script>
+      <script type="text/javascript" src='script.js'></script>
+  </head>
+
+  <body>
+
+    <div class="container top-buffer">
+
+        <h1> Review Rating System </h1>
+        <span>
+          Wikipedia Review is not a conspiracy, a team-building exercise, a role-playing game, or an experiment in collusion. It is not meant as a resource or training ground for those who would instill fear and misery in others. It does not exist to corrupt, but to expose corruption; it does not exist to tear down institutions, but to expose the ways in which institutions are torn down; it does not exist to hate, but is meant to expose hate in others. To expose these things is not evil. It is not a monolithic entity, nor the sum of its parts. Like-mindedness does not imply singularity of purpose; respect for the rights of one group does not imply disrespect for the rights of another. It is not intended to be predictable, consistent, or dull.
+        </span>
+
+      <div class="col-md-6">
+
+        <div class="row top-buffer">
+          <h3> Bussiness URL </h3>
+          <span>
+            Analyze reviews of a yelp business.
+        </div>
+
+        <form class="form-url">
+          <div class="row top-buffer">
+            <div class="col-md-9"> <input type="search" id="inputUrl" class="form-control" placeholder="http://www.yelp.com/biz/pisticci-new-york" autofocus> </div>
+            <div class="col-md-3"> <button class="btn btn-primary" type="submit">Rate</button> </div>
+          </div>
+        </form>
+
+        <div class="row top-buffer">
+          Results
+        </div>
+
+      </div>
+
+      <div class="col-md-6">
+
+        <div class="row top-buffer">
+          <h3> Review Text </h3>
+          <span>
+            Analyze a single review.
+        </div>
+
+        <form class="form-review">
+          <div class="row top-buffer"> <textarea id="inputReview" class="form-control" rows="6" placeholder="Spotted this place while waiting for seating at castle. This place is way better all you can eat meat and self serve salad bar style sides. More meat options, more sides, more sauces and the place is much cleaner. Quality you would expect for a $10 ayce kbbq. Service was a bit slow and lost in translation."></textarea> </div>
+          <div class="row top-buffer"> <button class="btn btn-block btn-primary" type="submit">Rate</button> </div>
+        </form>
+
+        <div class="row top-buffer">
+          Results
+        </div>
+
+      </div>
+
+    </div>
+
+  </body>
+</html>

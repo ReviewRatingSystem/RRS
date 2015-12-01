@@ -1,0 +1,11 @@
+body {
+  background-color: #fff;
+}
+
+.top-buffer {
+  margin-top:20px;
+}
+
+.col-md-9 {
+  padding-left: 0px !important;
+}
