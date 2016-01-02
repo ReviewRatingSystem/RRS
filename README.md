@@ -1,2 +1,4 @@
-# rrs
+# RRS
 Review Rating System
+
+Reviews are an important source of information for businesses looking for ways to provide better service as well as for customers trying to weigh their options. However, with the rise in popularity of applications like Yelp or Foursquare, the amount of available information quickly becomes overwhelming and prevents users from utilizing it efficiently. The Review Rating System (RRS) addresses this problem by providing a numerical estimate of ratings (on a 1-5 scale) when such information is absent and extracts the most important elements of a review (such as tips or other words that justify the rating). The RRS uses the Yelp reviews for training and testing.
