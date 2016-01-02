@@ -32,5 +32,6 @@
 	<classpathentry kind="lib" path="/Users/rezanayebi/workspace/RRS/WebContent/WEB-INF/lib/weka.jar"/>
 	<classpathentry kind="lib" path="/Users/rezanayebi/workspace/RRS/WebContent/WEB-INF/lib/xercesImpl-2.11.0.jar"/>
 	<classpathentry kind="lib" path="/Users/rezanayebi/workspace/RRS/WebContent/WEB-INF/lib/xml-apis-1.4.01.jar"/>
+	<classpathentry kind="lib" path="lib/mallet.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

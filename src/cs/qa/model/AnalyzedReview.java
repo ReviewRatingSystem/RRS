@@ -2,6 +2,7 @@ package cs.qa.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -60,10 +61,56 @@ public class AnalyzedReview extends Review {
 	private Map<String, List<NGram>> biGrams;
 	private Map<String, List<NGram>> triGrams;
 	private Sentiment sentiment;
+	private ArrayList<Highlight> highlights;
+	
+	private static class Highlight implements Comparable<Highlight> {
+		public int startIndex;
+		public int endIndex;
+		
+		public Highlight(int s, int e) {
+			this.startIndex = s;
+			this.endIndex = e;
+		}
+		
+		public Highlight(NGram n) {
+			this.startIndex = n.getStartIndex();
+			this.endIndex = n.getEndIndex();
+		}
+		
+		public int compareTo(Highlight h) {
+			if(h.startIndex > this.startIndex) {
+				return -1;
+			} else if(h.startIndex < this.startIndex) {
+				return 1;
+			} else if(h.endIndex > this.endIndex) {
+				return -1;
+			} else if(h.endIndex < this.endIndex) { 
+				return 1;
+			} else {
+				return 0;
+			}
+		}
+		
+		public static boolean mergeable(Highlight h1, Highlight h2) {
+			return h1.startIndex <= h2.endIndex &&   h1.startIndex >= h2.startIndex || 
+				   h2.startIndex <= h1.endIndex &&   h2.startIndex >= h1.startIndex ||
+				   h1.endIndex >= h2.startIndex &&   h1.endIndex <= h2.endIndex ||
+				   h2.endIndex >= h1.startIndex &&   h2.endIndex <= h1.endIndex;
+		}
+		
+		public static Highlight merge(Highlight h1, Highlight h2) {
+			if(!mergeable(h1,h2)) {
+				return null;
+			} else {
+				return new Highlight(Math.min(h1.startIndex, h2.startIndex), Math.max(h1.endIndex, h2.endIndex));
+			}
+		}
+	}
 	
 	public AnalyzedReview(Domain domain){
 		super();
 		this.domain = domain;
+		this.highlights = new ArrayList<Highlight>();
 	}
 	
 	public AnalyzedReview(String text, String tokenizedText, List<AnalyzedWord> analyzedWords, 
@@ -71,6 +118,7 @@ public class AnalyzedReview extends Review {
 			int rating, Domain domain) {
 		super(text, rating);
 		this.domain = domain;
+		this.highlights = new ArrayList<Highlight>();
 		this.tokenizedText = tokenizedText;
 		this.analyzedWords = analyzedWords;
 		this.uniGrams = uniGrams;
@@ -172,6 +220,7 @@ public class AnalyzedReview extends Review {
 		
 		return bestNgramList;
 	}
+	/*
 	public String tagTextForRelevantNGrams(){
 		String outputText = tokenizedText;
 		try{
@@ -274,7 +323,77 @@ public class AnalyzedReview extends Review {
 		outputText = outputText.replaceAll("\\s([\\.\\,\\;])", "$1").trim();
 		return outputText;
 	}
-
+	*/
+	public String tagTextForRelevantNGrams() { 
+		//String outputText = tokenizedText;
+		ArrayList<PriorityQueue<NGram>> bestNgramList = getBestNgrams();
+		String[] splitText = tokenizedText.split("\\s");
+		// ngram size
+		for(int l = 1; l<3; l++) {
+			// get best 3 ngrams for each size
+			for(int i=0; i<4; i++) { 
+				NGram n = bestNgramList.get(l-1).poll();
+				if(n != null) {
+					//System.out.println(n.getText());
+					Highlight cur = new Highlight(n);
+					int j = 0;
+					while(j < highlights.size()) {
+						if(Highlight.mergeable(highlights.get(j), cur)) {
+							highlights.set(j, Highlight.merge(highlights.get(j), cur));
+							break;
+						}
+						j++;
+					}
+					if(j == highlights.size()) {
+						highlights.add(cur);
+					}
+				}
+			}
+		}
+		StringBuilder b = new StringBuilder();
+		Collections.sort(highlights);
+		int c = 0;
+		/*
+		for(Highlight h : highlights) {
+			System.out.println(h.startIndex);
+			System.out.println(h.endIndex);
+			System.out.println("--------");
+		}
+		*/
+		int i = 0;
+		while(i < splitText.length) {
+			b.append(splitText[i]);
+			if(c < highlights.size() && highlights.get(c).startIndex == i) {
+				System.out.println(splitText[i+1]);
+				if(!(splitText[i+1].matches("\\'\\w") || splitText[i+1].matches("n\\'t"))) {
+					b.append(" ");
+				}
+				b.append("[[");
+				for(int j = i+1; j < highlights.get(c).endIndex+2; j++) {
+					b.append(splitText[j]);
+					if(j < highlights.get(c).endIndex+1 && !(splitText[j+1].matches("[\\.,;\\':\\?!]") 
+							|| splitText[j+1].matches("\\'\\w")
+							|| splitText[j+1].matches("n\\'t"))){
+						b.append(" ");
+					}
+					
+				}
+				b.append("]]");
+				i = highlights.get(c).endIndex +2;
+				c++;
+			} else {
+				i++;
+			}
+			if(i < splitText.length && !(splitText[i].matches("[\\.,;':\\?!]") 
+					|| splitText[i].matches("\\'\\w")
+					|| splitText[i].matches("n\\'t"))) {
+				b.append(" ");
+			}
+		}
+		String outputText = b.toString().trim();
+		return outputText;
+	}
+	
 	//Getters and Setters
 	
 	public String getTokenizedText() {
