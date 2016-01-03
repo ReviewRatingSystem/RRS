@@ -94,18 +94,15 @@ public class Model {
 		FastVector vector = getVector(domain, ngramSize);
 		int attributeCount = ResourceFactory.getNgramCount(domain, ngramSize) + extraAtts;
 		
-	   	//System.out.println("Getting Reviews");
 	   	List<IReview> testReviews = DataReader.read(domain, type, true);
 		Instances trainSet = new Instances("ReviewRating", vector, setSize);
 		trainSet.setClassIndex(attributeCount-1);
-		//System.out.println("Getting Vectors");
 		for(IReview r : testReviews) {
 			Instance inst = ((AnalyzedReview) r).getInstanceVector(ngramSize, bool);
 			inst.setDataset(trainSet);
 			inst.setValue(attributeCount-1, ""+ r.getRating());
 			trainSet.add(inst);
 		}
-		//System.out.println("Training model");
 		
 		FastVector vector2 = getVector(domain, ngramSize);
 	   	List<IReview> devReviews = DataReader.read(domain, DataType.TEST, true);

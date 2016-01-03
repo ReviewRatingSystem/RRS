@@ -220,112 +220,9 @@ public class AnalyzedReview extends Review {
 		
 		return bestNgramList;
 	}
-	/*
-	public String tagTextForRelevantNGrams(){
-		String outputText = tokenizedText;
-		try{
-			ArrayList<PriorityQueue<NGram>> bestNgramList = getBestNgrams();
-			String[] splitText = outputText.split("\\s");
-			// ngram size
-			for(int l = 1; l<3; l++) {
-				// get best 3 ngrams for each size
-				for(int i=0; i<4; i++) {
-					NGram n = bestNgramList.get(l-1).poll();
-					if(n != null) {
-						String[] arr = Arrays.copyOfRange(splitText, n.getStartIndex()+1, n.getEndIndex()+2);
-						StringBuilder sb = new StringBuilder();
-						StringBuilder rb1 = new StringBuilder();
-						StringBuilder rb2 = new StringBuilder();
-						StringBuilder rb3 = new StringBuilder();
-						StringBuilder rb4 = new StringBuilder();
-						rb1.append("(.*)(");
-						rb2.append("(.*)(");
-						rb3.append("(.*)(\\[\\[)([^(\\]\\])]*)(");
-						rb4.append("(.*)(\\[\\[)([^(\\]\\])]*)(");
-						for(int i1 = 0; i1 < arr.length; i1++) {
-							if(i1 < arr.length-1) {
-								sb.append(arr[i1] + " ");
-								rb1.append(arr[i1] +"(\\]\\])?\\s(\\[\\[)?([\\w\\s]*)");
-								rb2.append(arr[i1] +"(\\]\\])?\\s(\\[\\[)?([\\w\\s]*)");
-								rb3.append(arr[i1] +"(\\]\\])?\\s(\\[\\[)?([\\w\\s]*)");
-								rb4.append(arr[i1] +"(\\]\\])?\\s(\\[\\[)?([\\w\\s]*)");
-							} else {
-								sb.append(arr[i1]);
-								rb1.append(arr[i1]);
-								rb2.append(arr[i1]);
-								rb3.append(arr[i1]);
-								rb4.append(arr[i1]);
-								
-							}
-							
-						}
-						rb1.append(")(([^(\\]\\])]*)(.*) | ([^(\\]\\])]*$))");
-						rb2.append(")([^(\\[\\[)]*)(\\]\\])(.*)");
-						rb3.append(")(([^(\\]\\])]*)(.*) | ([^(\\]\\])]*$))");
-						rb4.append(")([^(\\[\\[)]*)(\\]\\])(.*)");
-						String re1 = rb1.toString(); 
-						String re2 = rb2.toString(); 
-						String re3 = rb3.toString(); 
-						String re4 = rb4.toString(); 
-						Pattern p1 = Pattern.compile(re1);
-						Pattern p2 = Pattern.compile(re2);
-						Pattern p3 = Pattern.compile(re3);
-						Pattern p4 = Pattern.compile(re4);
-						String ngramStr = sb.toString();
-						if(l == 1) {
-							if(!Pattern.matches("(.*)(\\[\\[)" + ngramStr + "(\\]\\])(.*)", outputText)) {
-								outputText = outputText.replaceAll("^" + ngramStr + "\\s", "[[" + ngramStr + "]] ");
-								outputText = outputText.replaceAll("\\s" + ngramStr + "$", " [[" + ngramStr + "]]");
-								outputText = outputText.replaceAll("^" + ngramStr + "$", "[[" + ngramStr + "]]");
-								outputText = outputText.replaceAll("\\s" + ngramStr + "\\s", " [[" + ngramStr + "]] ");
-								outputText = outputText.replaceAll("\\s" + ngramStr + "\\s\\[\\[" , " [[" + ngramStr + " ");
-								outputText = outputText.replaceAll("\\]\\]\\s" + ngramStr + "\\s"," " + ngramStr + "]] ");
-							}
-							
-						} else if(l == 2) {
-							Matcher m1  = p1.matcher(outputText);
-							Matcher m2  = p2.matcher(outputText);
-							Matcher m3  = p3.matcher(outputText);
-							Matcher m4  = p4.matcher(outputText);
-							if(m4.find() && m4.group(1) != null) {
-								String rep = m4.group(1) + "[[" + ((m4.group(3) != null ? m4.group(3) : "") + m4.group(4)).replaceAll("[(\\[\\[)[(\\]\\])]]", "").trim() +
-										m4.group(m4.groupCount()-2) + m4.group(m4.groupCount()-1) + m4.group(m4.groupCount());
-								rep = rep.replaceAll("[\\$]", "\\\\\\$");
-								outputText = outputText.replaceAll(re4, rep);
-								
-							} else if(m3.find() && m3.group(1) != null) {
-								String rep = m3.group(1) + "[[" + ((m3.group(3) != null ? m3.group(3) : "") + m3.group(4)).replaceAll("[(\\[\\[)[(\\]\\])]]", "").trim() 
-										+ "]]"+ m3.group(m3.groupCount()-3);
-								rep = rep.replaceAll("[\\$]", "\\\\\\$");
-								outputText = outputText.replaceAll(re3, rep);
-								
-							} else if(m2.find() && m2.group(1) != null) {
-								String rep = m2.group(1) + "[[" + m2.group(2).replaceAll("[(\\[\\[)[(\\]\\])]]", "").trim() +
-										m2.group(m2.groupCount()-2) + m2.group(m2.groupCount()-1) + m2.group(m2.groupCount());
-								rep = rep.replaceAll("[\\$]", "\\\\\\$");
-								outputText = outputText.replaceAll(re2, rep);
-								
-							} else if(m1.find() && m1.group(1) != null) {
-								String rep = m1.group(1) + "[[" + m1.group(2).replaceAll("[(\\[\\[)[(\\]\\])]]", "").trim() + "]]" + m1.group(m1.groupCount()-3);
-								rep = rep.replaceAll("[\\$]", "\\\\\\$"); 
-								
-								outputText = outputText.replaceAll(re1, rep);
-								
-							} 							
-						}	
-					}
-				}
-			}
-		}catch(Exception e){
-			System.out.println("Error while tagging ngrams!");
-			e.printStackTrace();
-		}
-		outputText = outputText.replaceAll("\\s([\\.\\,\\;])", "$1").trim();
-		return outputText;
-	}
-	*/
+
+	
 	public String tagTextForRelevantNGrams() { 
-		//String outputText = tokenizedText;
 		ArrayList<PriorityQueue<NGram>> bestNgramList = getBestNgrams();
 		String[] splitText = tokenizedText.split("\\s");
 		// ngram size
@@ -334,7 +231,6 @@ public class AnalyzedReview extends Review {
 			for(int i=0; i<4; i++) { 
 				NGram n = bestNgramList.get(l-1).poll();
 				if(n != null) {
-					//System.out.println(n.getText());
 					Highlight cur = new Highlight(n);
 					int j = 0;
 					while(j < highlights.size()) {
